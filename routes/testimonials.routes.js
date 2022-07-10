@@ -9,7 +9,7 @@ router.route('/testimonials').get((req, res) => {
 });
 
 router.route('/testimonials/random').get((req, res) => {
-    res.json(db.testimonials[Math.floor(Math.random() * (db.testimonials.length))]);
+    res.json(db.testimonials[Math.floor(Math.random() * db.testimonials.length)]);
     console.log(Math.floor(Math.random() * db.testimonials.length));
 });
 
@@ -21,7 +21,7 @@ router.route('/testimonials').post((req, res) => {
     const { author, text } = req.body;
     const id = uuid();
     const newTestimonial = { id: id, author, text };
-    db.testimonial.push(newTestimonial);
+    db.testimonials.push(newTestimonial);
     res.json({ message: 'ok!' });
 });
 
@@ -29,7 +29,7 @@ router.route('/testimonials/:id').put(
     (req, res) => {
         const { author, text } = req.body;
         const id = +req.params.id;
-        const testimonial = db.testimonial.find((testimonial) => testimonial.id === id);
+        const testimonial = db.testimonials.find((testimonial) => testimonial.id === id);
         testimonial.author = author;
         testimonial.text = text;
         res.json({ message: 'ok!' });
@@ -43,7 +43,7 @@ router.route('/testimonials/:id').delete(
     (req, res) => {
         const id = +req.params.id;
         db.testimonial.splice(
-            db.testimonial.findIndex((testimonial) => testimonial.id === id),
+            db.testimonials.findIndex((testimonial) => testimonial.id === id),
             1
         );
         res.json({ message: 'Testimonial deleted' });
