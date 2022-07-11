@@ -9,7 +9,7 @@ router.route('/seats').get((req, res) => {
 });
 
 router.route('/seats/random').get((req, res) => {
-    res.json(db.seats[Math.floor(Math.random() * (db.seats.length))]);
+    res.json(db.seats[Math.floor(Math.random() * db.seats.length)]);
     console.log(Math.floor(Math.random() * db.seats.length));
 });
 
@@ -21,8 +21,13 @@ router.route('/seats').post((req, res) => {
     const { day, seat, client, email } = req.body;
     const id = uuid();
     const newSeat = { id: id, day, seat, client, email };
-    db.seats.push(newSeat);
-    res.json({ message: 'ok!' });
+    if (db.seats.some((seatCheck) => seatCheck.day == newSeat.day && seatCheck.seat == newSeat.seat)) {
+        res.json({ message: 'Seat is already taken' });
+        res.status(409).json({ message: 'Seat is already taken...' });
+    } else {
+        db.seats.push(newSeat);
+        res.json({ message: 'ok!' });
+    }
 });
 
 router.route('/seats/:id').put(
