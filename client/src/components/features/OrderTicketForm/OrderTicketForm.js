@@ -11,7 +11,7 @@ const OrderTicketForm = () => {
     const dispatch = useDispatch();
     const requests = useSelector(getRequests);
 
-    const socket = io('http://localhost:8000');
+    const socket = io(process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:8000/');
 
     useEffect(() => {
       socket.on('seatsUpdated', (seats) => {
