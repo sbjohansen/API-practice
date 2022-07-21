@@ -1,7 +1,7 @@
 import { Button, Form, FormGroup, Label, Input, Row, Col, Alert, Progress } from 'reactstrap';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {addSeatRequest, getRequests, loadSeats, loadSeatsRequest} from '../../../redux/seatsRedux';
+import { addSeatRequest, getRequests, loadSeats, loadSeatsRequest } from '../../../redux/seatsRedux';
 import io from 'socket.io-client';
 
 import './OrderTicketForm.scss';
@@ -14,11 +14,10 @@ const OrderTicketForm = () => {
     const socket = io(process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:8000/');
 
     useEffect(() => {
-      socket.on('seatsUpdated', (seats) => {
-          dispatch(loadSeats(seats));
-      });
+        socket.on('seatsUpdated', (seats) => {
+            dispatch(loadSeats(seats));
+        });
     }, []);
-    
 
     //end of seats update
 

@@ -1,11 +1,9 @@
 const express = require('express');
 const cors = require('cors');
-const uuid = require('uuid').v4;
 const path = require('path');
-const db = require('./db.js');
 const socket = require('socket.io');
 const app = express();
-
+const mongoose = require('mongoose');
 
 //import routes
 const testimonialRoutes = require('./routes/testimonials.routes.js');
@@ -40,7 +38,14 @@ const server = app.listen(process.env.PORT || 8000, () => {
 
 const io = socket(server);
 
-
 io.on('connection', (socket) => {
     console.log('Client connected with ID: ' + socket.id);
 });
+
+mongoose.connect('mongodb://localhost:27017/newWave', { useNewUrlParser: true });
+const db = mongoose.connection;
+
+db.once('open', () => {
+    console.log('Connected to the database');
+});
+db.on('error', (err) => console.log('Error ' + err));
