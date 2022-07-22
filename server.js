@@ -5,6 +5,8 @@ const socket = require('socket.io');
 const app = express();
 const mongoose = require('mongoose');
 
+const uri = 'mongodb+srv://plushack:ovKzs9COC8P0s0r6@cluster0.so0dxnp.mongodb.net/newWave';
+
 //import routes
 const testimonialRoutes = require('./routes/testimonials.routes.js');
 const concertsRoutes = require('./routes/concerts.routes.js');
@@ -42,7 +44,7 @@ io.on('connection', (socket) => {
     console.log('Client connected with ID: ' + socket.id);
 });
 
-mongoose.connect('mongodb://localhost:27017/newWave', { useNewUrlParser: true });
+mongoose.connect(uri, { useNewUrlParser: true });
 const db = mongoose.connection;
 
 db.once('open', () => {
