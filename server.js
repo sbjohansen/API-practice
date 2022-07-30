@@ -5,7 +5,12 @@ const socket = require('socket.io');
 const app = express();
 const mongoose = require('mongoose');
 
-const uri = 'mongodb+srv://plushack:ovKzs9COC8P0s0r6@cluster0.so0dxnp.mongodb.net/newWave';
+const NODE_ENV = process.env.NODE_ENV;
+let uri = '';
+
+if (NODE_ENV === 'production') uri = 'mongodb+srv://plushack:ovKzs9COC8P0s0r6@cluster0.so0dxnp.mongodb.net/newWave';
+else if (NODE_ENV === 'test') uri = 'mongodb://localhost:27017/newWaveDBtest';
+else uri = 'mongodb://localhost:27017/newWave';
 
 //import routes
 const testimonialRoutes = require('./routes/testimonials.routes.js');
@@ -18,8 +23,8 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, '/client/build')));
 
 app.use((req, res, next) => {
-    req.io = io;
-    next();
+  req.io = io;
+  next();
 });
 
 app.use('/api/', testimonialRoutes);
@@ -27,27 +32,33 @@ app.use('/api/', concertsRoutes);
 app.use('/api/', seatsRoutes);
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/client/build/index.html'));
+  res.sendFile(path.join(__dirname, '/client/build/index.html'));
 });
 
 app.use((req, res) => {
-    res.status(404).send('404 not found...');
+  res.status(404).send('404 not found...');
 });
 
 const server = app.listen(process.env.PORT || 8000, () => {
+  if (NODE_ENV !== 'test') {
     console.log('Server is running on port: 8000');
+  }
 });
 
 const io = socket(server);
 
 io.on('connection', (socket) => {
-    console.log('Client connected with ID: ' + socket.id);
+  console.log('Client connected with ID: ' + socket.id);
 });
 
-mongoose.connect(uri, { useNewUrlParser: true });
+mongoose.connect(uri, { useUnifiedTopology: true });
 const db = mongoose.connection;
 
 db.once('open', () => {
+  if (NODE_ENV !== 'test') {
     console.log('Connected to the database');
+  }
 });
 db.on('error', (err) => console.log('Error ' + err));
+
+module.exports = server;
