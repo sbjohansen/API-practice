@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 let uri = '';
 const NODE_ENV = process.env.NODE_ENV;
 
-if (NODE_ENV === 'production') uri = 'mongodb+srv://' + env.dblogin + ':' + env.dbpass + '@cluster0.so0dxnp.mongodb.net/newWave';
+if (NODE_ENV === 'production') uri = process.env.DB_URL;
 else if (NODE_ENV === 'test') uri = 'mongodb://localhost:27017/newWaveDBtest';
 else uri = 'mongodb://localhost:27017/newWave';
 
