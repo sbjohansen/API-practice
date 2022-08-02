@@ -5,8 +5,8 @@ const socket = require('socket.io');
 const app = express();
 const mongoose = require('mongoose');
 
-const NODE_ENV = process.env.NODE_ENV;
 let uri = '';
+const NODE_ENV = process.env.NODE_ENV;
 
 if (NODE_ENV === 'production') uri = 'mongodb+srv://plushack:ovKzs9COC8P0s0r6@cluster0.so0dxnp.mongodb.net/newWave';
 else if (NODE_ENV === 'test') uri = 'mongodb://localhost:27017/newWaveDBtest';
@@ -51,7 +51,7 @@ io.on('connection', (socket) => {
   console.log('Client connected with ID: ' + socket.id);
 });
 
-mongoose.connect(uri, { useUnifiedTopology: true });
+mongoose.connect(uri, { useNewUrlParser: true });
 const db = mongoose.connection;
 
 db.once('open', () => {
