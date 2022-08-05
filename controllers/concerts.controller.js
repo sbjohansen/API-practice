@@ -73,7 +73,7 @@ exports.getConcertByDay = async (req, res) => {
 
 exports.createConcert = async (req, res) => {
   try {
-    const { performer, genre, price, day, image } = req.body;
+    const { performer, genre, price, day, image } = sanitize(req.body);
     const newConcert = { performer, genre, price, day, image };
     const conc = await Concert.create(newConcert);
     res.json(conc);
@@ -84,7 +84,7 @@ exports.createConcert = async (req, res) => {
 
 exports.updateConcert = async (req, res) => {
   try {
-    const { performer, genre, price, day, image } = req.body;
+    const { performer, genre, price, day, image } = sanitize(req.body);
     const id = +req.params.id;
     const concert = await Concert.findById(id);
     if (!concert) res.status(404).json({ message: 'Not found' });

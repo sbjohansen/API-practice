@@ -50,7 +50,7 @@ exports.createSeat = async (req, res) => {
 
 exports.updateSeat = async (req, res) => {
   try {
-    const { day, seat, client, email } = req.body;
+    const { day, seat, client, email } = sanitize(req.body);
     const id = +req.params.id;
     const updateSeat = await Seat.findById(id);
     if (!updateSeat) res.status(404).json({ message: 'Not found' });
